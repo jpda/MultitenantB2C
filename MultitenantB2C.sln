@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29505.145
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultitenantB2C.OpenId", "MultitenantB2C.OpenId\MultitenantB2C.OpenId.csproj", "{B7981FA1-28FA-4A2D-8C5B-C842C041B61F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultitenantB2C.OpenId", "MultitenantB2C.OpenId\MultitenantB2C.OpenId.csproj", "{B7981FA1-28FA-4A2D-8C5B-C842C041B61F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultitenantB2C.SingleHomed", "MultitenantB2C.SingleHomed\MultitenantB2C.SingleHomed.csproj", "{A1EC8259-441E-4246-8D80-C7396162EE78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B7981FA1-28FA-4A2D-8C5B-C842C041B61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7981FA1-28FA-4A2D-8C5B-C842C041B61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7981FA1-28FA-4A2D-8C5B-C842C041B61F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EC8259-441E-4246-8D80-C7396162EE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EC8259-441E-4246-8D80-C7396162EE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EC8259-441E-4246-8D80-C7396162EE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EC8259-441E-4246-8D80-C7396162EE78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
