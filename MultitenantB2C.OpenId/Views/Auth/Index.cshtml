@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Authentication.AuthenticationScheme>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Which account do you want to use?</h1>
+
+<a class="btn btn-primary" href="/auth/azuread">
+    Work or school account (Azure AD)
+</a>
+<a class="btn btn-primary" href="/auth/azureadb2c">
+    Local account (B2C)
+</a>
+
+@*@foreach (var a in Model)
+{
+    <a class="btn btn-primary" href="/auth/aad">
+        Work or school account (Azure AD)
+    </a>
+    <a href="/auth/azuread">aad</a>
+    <a href="/auth/azureadb2c">b2c</a>
+}*@
