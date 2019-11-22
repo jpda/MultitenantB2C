@@ -13,14 +13,14 @@ This uses the generic OpenIdConnect providers since the AzureAD.UI and AzureADB2
 Since we're using multitenancy in AAD, we have a potentially enormous valid issuer list. Instead of having a static list, this uses the metadata endpoints to pull down the openid metadata for the different authorities (meta-metadata?) and use the issuer templates within to determine if there is a match.
 See [here](https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/blob/master/Microsoft.Identity.Web/Resource/AadIssuerValidator.cs) for a potentially more robust issuer validator. 
 B2C will be a single valid issuer, so no need to jump through validation hoops for B2C. Each cloud (Commercial/global AAD, China, Gov) will have their own endpoints and issuer values, so at runtime this is driven by the authority (e.g., login.microsoftonline.com, login.partner.microsoftonline.cn, login.microsoftonline.us/de).
+There is an additional, simpler validator - AzureAdTenantIssuerPrefixValidator.cs - this validator just checks the prefixes of the issuers (so for wide distribution, an array of 'https://sts.windows.net/' and 'https://login.microsoftonline.com/') should be a sufficient set of prefixes.
 
 ## choosing an authentication path
 There is an AuthController with buttons to login for each provider. Each button goes to a specific controller action that enforces a specific policy attribute (e.g., `/auth/azuread` uses `Authorize(AuthenticationPolicies = 'AzureAd')`) that pushes a user down a specific authentication path.
-This uses a basic `RequireAuthenticatedUser` authorization policy, so any authenticated user can see protected pages. 
+This uses a basic `RequireAuthenticatedUser` authorization policy, so any authenticated user from any authentication provider can see protected pages. 
 
 ## todo
 - add similar options for validating api bearer tokens
 - add role data to users during sign-in for more authz
 - get some data from graph
-- clean up and move issuer validator to it's own class
 - tbd

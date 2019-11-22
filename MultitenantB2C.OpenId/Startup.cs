@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Numerics;
 using System.Security.Claims;
-using System.Security.Cryptography.Xml;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -13,11 +12,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -33,17 +32,12 @@ namespace MultitenantB2C.OpenId
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClient();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(o =>
-                {
-                    o.LoginPath = "/auth";
-                })
                 .AddOpenIdConnect(AzureAdOptions.AuthenticationScheme, o =>
                 {
+                    var prefixValidator = new AzureAdTenantIssuerPrefixValidator(Configuration["AzureAd:Authority"]);
                     // todo: move these to Options
                     o.Authority = $"{Configuration["AzureAd:Instance"]}/common/v2.0";
                     o.ClientId = Configuration["AzureAd:ClientId"];
@@ -52,129 +46,47 @@ namespace MultitenantB2C.OpenId
                     o.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                     o.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        // move this elsewhere
-                        // cache these metadata calls
-                        // see https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/blob/master/Microsoft.Identity.Web/Resource/AadIssuerValidator.cs for inspiration
-                        // issuer alias data is here: https://login.microsoftonline.com/common/discovery/instance?authorization_endpoint=https://<instance>/common/oauth2/v2.0/authorize&api-version=1.1
-                        // v1 issuer alias data is here: https://login.microsoftonline.com/common/discovery/instance?authorization_endpoint=https://<instance>/common/oauth2/authorize&api-version=1.1
-
-                        // if you want to accept _all_ AAD tenants, we need to go get all the issuers from the different endpoints, but they'll all follow a similar pattern, e.g.,
-                        // https://sts.windows.net/<tenant-id>
-                        // https://login.microsoftonline.com/<tenant-id>
-                        // https://login.microsoftonline.com/<tenant-id>/v2.0
-
-                        IssuerValidator = (originalIssuer, token, validationParameters) =>
-                        {
-                            const string versionedDiscoveryUrl = "https://login.microsoftonline.com/common/discovery/instance?authorization_endpoint={0}common/oauth2{1}authorize&api-version=1.1";
-
-                            // todo: get this from ServiceCollection
-                            var a = new System.Net.Http.HttpClient();
-
-                            var validIssuerTemplates = new List<string>();
-                            async Task<string> FindIssuers(string instance, string version)
-                            {
-                                var request = await a.GetAsync(string.Format(versionedDiscoveryUrl, instance, version));
-                                var data = JsonDocument.Parse(await request.Content.ReadAsStringAsync());
-                                var discoveryUrl = data.RootElement.GetProperty("tenant_discovery_endpoint").GetString();
-                                var metadataRequest = await a.GetAsync(discoveryUrl);
-                                var metadataData = JsonDocument.Parse(await metadataRequest.Content.ReadAsStringAsync());
-                                return metadataData.RootElement.GetProperty("issuer").GetString();
-                            }
-
-                            validIssuerTemplates.Add(FindIssuers(Configuration["AzureAd:Instance"], string.Empty).Result);
-                            validIssuerTemplates.Add(FindIssuers(Configuration["AzureAd:Instance"], "/v2.0/").Result);
-
-                            // sample issuer: https://login.microsoftonline.com/tenant/v2.0
-                            // sample issuer: https://sts.windows.net/tenant
-
-                            var issuerUri = new Uri(originalIssuer);
-
-                            if (token is JwtSecurityToken jwt)
-                            {
-                                var tokenIssuer = jwt.Claims.SingleOrDefault(x => x.Type == "iss");
-                                if (tokenIssuer == null) throw new ArgumentNullException("Issuer missing in token");
-                                var tokenIssuerUri = new Uri(tokenIssuer.Value);
-
-                                var tenantClaims = jwt.Claims.Where(x => x.Type == "tid" || x.Type == "tenantId").Select(y => y.Value).Distinct(StringComparer.OrdinalIgnoreCase);
-                                if (!tenantClaims.Any()) throw new ArgumentNullException("TenantId or tid claim missing from token");
-
-                                // implies the tenantId and tid claims don't match - this would be weird.
-                                if (tenantClaims.Count() > 1) throw new SecurityTokenInvalidIssuerException("Token data error, mulitple tenants");
-
-                                // replace the templates with the actual tenant id
-                                // we shouldn't have both tenantId and tid in the same token
-                                var validIssuers = validIssuerTemplates.Select(x => x.Replace("{tenantid}", tenantClaims.First()));
-
-                                // if a token's issuer matches the templated issuer from metadata, it's valid so let's move on
-                                var matchedIssuers = validIssuers.Where(y => string.Equals(y, tokenIssuer.Value, StringComparison.OrdinalIgnoreCase));
-                                if (matchedIssuers.Any())
-                                {
-                                    return matchedIssuers.First();
-                                }
-                            }
-
-                            throw new SecurityTokenInvalidIssuerException("No matching issuer found");
-                        }
+                        IssuerValidator = prefixValidator.Validate
                     };
-
                 })
                 .AddOpenIdConnect(AzureAdB2COptions.AuthenticationScheme, o =>
                 {
                     // todo: move these to options
-                    o.Authority = $"{Configuration["AzureAdB2C:Instance"]}/{Configuration["AzureAdB2C:Domain"]}/{Configuration["AzureAdB2C:SignUpSignInPolicyId"]}/v2.0";
+                    o.Authority = $"{Configuration["AzureAdB2C:Instance"]}/tfp/{Configuration["AzureAdB2C:Domain"]}/{Configuration["AzureAdB2C:SignUpSignInPolicyId"]}/v2.0";
                     o.ClientId = Configuration["AzureAdB2C:ClientId"];
                     o.ClientSecret = Configuration["AzureAdB2C:ClientSecret"];
                     o.CallbackPath = Configuration["AzureAdB2C:CallbackPath"];
                     //o.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                    o.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        // b2c has two issuer options per policy
+                        ValidIssuers = new List<string>() {
+                            $"{Configuration["AzureAdB2C:Instance"]}/{Configuration["AzureAdB2C:TenantId"]}/v2.0/",
+                            $"{Configuration["AzureAdB2C:Instance"]}/tfp/{Configuration["AzureAdB2C:TenantId"]}/{Configuration["AzureAdB2C:SignUpSignInPolicyId"]}/v2.0/"
+                        }
+                    };
                 })
-                // todo: register apps in gov and china
-                .AddOpenIdConnect(AzureAdChinaOptions.AuthenticationScheme, o =>
+                .AddCookie(o =>
                 {
-                    // todo: move these to options
-                    o.Authority = $"{Configuration["AzureAdB2C:Instance"]}/{Configuration["AzureAdB2C:Domain"]}/{Configuration["AzureAdB2C:SignUpSignInPolicyId"]}/v2.0";
-                    o.ClientId = Configuration["AzureAdB2C:ClientId"];
-                    o.ClientSecret = Configuration["AzureAdB2C:ClientSecret"];
-                    o.CallbackPath = Configuration["AzureAdB2C:CallbackPath"];
-                    //o.ResponseType = OpenIdConnectResponseType.CodeIdToken;
-                })
-                .AddOpenIdConnect(AzureAdGovOptions.AuthenticationScheme, o =>
-                {
-                    // todo: move these to options
-                    o.Authority = $"{Configuration["AzureAdB2C:Instance"]}/{Configuration["AzureAdB2C:Domain"]}/{Configuration["AzureAdB2C:SignUpSignInPolicyId"]}/v2.0";
-                    o.ClientId = Configuration["AzureAdB2C:ClientId"];
-                    o.ClientSecret = Configuration["AzureAdB2C:ClientSecret"];
-                    o.CallbackPath = Configuration["AzureAdB2C:CallbackPath"];
-                    //o.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                    o.LoginPath = "/auth";
                 })
                 ;
 
-            //services.AddTransient<IConfidentialClientApplication>(x =>
-            //{
-            //    return ConfidentialClientApplicationBuilder
-            //            .Create(Configuration["AzureAd:ClientId"])
-            //            .WithClientSecret(Configuration["AzureAd:ClientSecret"])
-            //            // todo: figure out a better way to do this with IHttpContextAccessor, although it may not matter since we're not dynamically adding redirect uris to AAD
-            //            .WithRedirectUri($"{Configuration["AzureAd:RedirectUriRoot"]}{Configuration["AzureAd:CallbackPath"]}")
-            //            .WithAuthority($"{Configuration["AzureAd:Instance"]}/{Configuration["AzureAd:Domain"]}/v2.0")
-            //            .Build();
-            //});
-
             // AAD configuration
-            services.Configure<OpenIdConnectOptions>(AzureAdOptions.AuthenticationScheme, x =>
+            services.Configure<OpenIdConnectOptions>(AzureAdOptions.AuthenticationScheme, options =>
             {
-                x.Events = new OpenIdConnectEvents()
+                options.Events = new OpenIdConnectEvents()
                 {
                     OnAuthorizationCodeReceived = ctx =>
                     {
                         var code = ctx.ProtocolMessage.Code;
 
-                        //var user = ctx.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
                         var app = ConfidentialClientApplicationBuilder
                             .Create(Configuration["AzureAd:ClientId"])
                             .WithClientSecret(Configuration["AzureAd:ClientSecret"])
                             // todo: figure out a better way to do this with IHttpContextAccessor, although it may not matter since we're not dynamically adding redirect uris to AAD
                             .WithRedirectUri($"{Configuration["AzureAd:RedirectUriRoot"]}{Configuration["AzureAd:CallbackPath"]}")
-                            .WithAuthority($"{Configuration["AzureAd:Instance"]}/{Configuration["AzureAd:Domain"]}/v2.0")
+                            .WithAuthority($"{Configuration["AzureAd:Instance"]}/common/v2.0")
                             .Build();
 
                         try
@@ -205,7 +117,7 @@ namespace MultitenantB2C.OpenId
                 };
             });
 
-            // B2C configuration
+            //B2C configuration
             services.Configure<OpenIdConnectOptions>(AzureAdB2COptions.AuthenticationScheme, x =>
             {
                 x.Events = new OpenIdConnectEvents()
@@ -234,8 +146,44 @@ namespace MultitenantB2C.OpenId
                         }
                         return Task.CompletedTask;
                     },
-                    OnRedirectToIdentityProvider = ctx =>
+                    OnTokenValidated = ctx =>
                     {
+                        // todo: add any additional claims here, say a database lookup for specific org, tenant, userinfo, etc.
+                        // we also want to copy any claims from the AAD ticket
+                        ctx.Principal.AddIdentity(new ClaimsIdentity(ctx.Principal.Claims.ToList()));
+                        return Task.CompletedTask;
+                    },
+                    OnRemoteFailure = ctx =>
+                    {
+                        // b2c handles things like password reset with an error :/ so we need to capture that and redirect
+                        // see https://github.com/aspnet/AspNetCore/blob/master/src/Azure/AzureAD/Authentication.AzureADB2C.UI/src/AzureAdB2COpenIDConnectEventHandlers.cs
+                        ctx.HandleResponse();
+                        // Handle the error code that Azure Active Directory B2C throws when trying to reset a password from the login page 
+                        // because password reset is not supported by a "sign-up or sign-in policy".
+                        // Below is a sample error message:
+                        // 'access_denied', error_description: 'AADB2C90118: The user has forgotten their password.
+                        // Correlation ID: f99deff4-f43b-43cc-b4e7-36141dbaf0a0
+                        // Timestamp: 2018-03-05 02:49:35Z
+                        //', error_uri: 'error_uri is null'.
+                        if (ctx.Failure is OpenIdConnectProtocolException && ctx.Failure.Message.Contains("AADB2C90118"))
+                        {
+                            // If the user clicked the reset password link, redirect to the reset password route
+                            //ctx.Response.Redirect($"{ctx.Request.PathBase}/AzureADB2C/Account/ResetPassword/{SchemeName}");
+                        }
+                        // Access denied errors happen when a user cancels an action on the Azure Active Directory B2C UI. We just redirect back to
+                        // the main page in that case.
+                        // Message contains error: 'access_denied', error_description: 'AADB2C90091: The user has cancelled entering self-asserted information.
+                        // Correlation ID: d01c8878-0732-4eb2-beb8-da82a57432e0
+                        // Timestamp: 2018-03-05 02:56:49Z
+                        // ', error_uri: 'error_uri is null'.
+                        else if (ctx.Failure is OpenIdConnectProtocolException && ctx.Failure.Message.Contains("access_denied"))
+                        {
+                            ctx.Response.Redirect($"{ctx.Request.PathBase}/");
+                        }
+                        else
+                        {
+                            //ctx.Response.Redirect($"{ctx.Request.PathBase}/AzureADB2C/Account/Error");
+                        }
                         return Task.CompletedTask;
                     }
                 };
