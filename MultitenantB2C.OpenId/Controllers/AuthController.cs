@@ -34,5 +34,11 @@ namespace MultitenantB2C.OpenId.Controllers
         {
             return Redirect("/");
         }
+
+        public async Task<IActionResult> SignOut()
+        {
+            var schemes = await _provider.GetAllSchemesAsync();
+            return this.SignOut(schemes.Select(x => x.Name).ToArray());
+        }
     }
 }
