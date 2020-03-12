@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MultitenantB2C.SingleHomed</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Stanley</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,10 +22,25 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Artisan">Artisans Portal</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Curators">XML Curators</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">User admin</a>
+                                <a class="dropdown-item" href="#">Org admin</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Admin...admin</a>
+                            </div>
                         </li>
                     </ul>
                 </div>
+                @await Html.PartialAsync("_LoginPartial")
             </div>
         </nav>
     </header>
@@ -34,10 +49,9 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - MultitenantB2C.SingleHomed - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; jpda - Find me on <a href="https://github.com/jpda" target="_blank">GitHub</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

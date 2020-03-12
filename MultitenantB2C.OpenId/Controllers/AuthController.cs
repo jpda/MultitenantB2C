@@ -11,7 +11,7 @@ namespace MultitenantB2C.OpenId.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthenticationSchemeProvider _provider;
-
+        
         public AuthController(IAuthenticationSchemeProvider schemeProvider)
         {
             _provider = schemeProvider;
