@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewData["Title"] = "SignIn";
+}
+
+<h1>Sign in with your email address</h1>
+<form asp-action="HrdRedirect">
+    <div class="form-group">
+        <input class="form-control form-control-lg" id="mail" name="mail" type="email" aria-describedby="emailHelp" placeholder="Use your email address to sign in" />
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">Let me in, I have work to do</button>
+</form>
+
+@*@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mail").blur(function (e) {
+                var val = $("#mail").val();
+                var url = "/account/hrdsrf";
+                $.ajax({
+                    url: url,
+                    data: "mail=" + val,
+                    type: "POST",
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    success: function (data) {
+                        if (data.Found) {
+                            $("button").show();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        
+                    }
+                });
+            });
+        });
+    </script>
+}*@

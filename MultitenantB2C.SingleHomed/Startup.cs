@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +29,20 @@ namespace MultitenantB2C.SingleHomed
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication().AddAzureADB2C(options => Configuration.Bind("AzureAdB2C", options));
+            services.AddHttpClient();
+
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                //sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddAzureAdB2C(options => Configuration.Bind("Authentication:AzureAdB2C", options))
+            .AddCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Account/SignIn";
+            });
+
             services.AddControllersWithViews(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -42,6 +58,7 @@ namespace MultitenantB2C.SingleHomed
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
             }
             else
             {
@@ -49,6 +66,7 @@ namespace MultitenantB2C.SingleHomed
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

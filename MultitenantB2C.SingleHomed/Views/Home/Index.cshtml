@@ -2,7 +2,39 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    @if (@User.Identity.IsAuthenticated)
+    {
+        <h2>hello @User.Identity.Name</h2>
+        <table class="table table-striped table-responsive-lg">
+            <thead>
+                <tr>
+                    <th>Claim Type</th>
+                    <th>Claim Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Security.Claims.Claim c in User.Claims)
+                {
+                    <tr>
+                        <td>@c.Type</td>
+                        <td>@(c.Value.Length > 100 ? $"{c.Value.Substring(0, 100)}..." : c.Value)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <p>
+                Your data came from <b>@ViewBag.Idp</b>.
+                @if (ViewBag.KnownOrg)
+                {
+                    <span>In our database, it looks like you're a member of the <b>@ViewBag.Org</b> organization. Let's show you your stuff!</span>
+                }
+                else
+                {
+                    <span>We can't find your organization. Do you want to sign up?</span>
+                }
+            </p>
+        </div>
+    }
 </div>

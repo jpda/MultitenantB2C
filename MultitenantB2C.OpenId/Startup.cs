@@ -93,6 +93,20 @@ namespace MultitenantB2C.OpenId
                         {
                             //todo: cache
                             var result = app.AcquireTokenByAuthorizationCode(new[] { "User.Read" }, code);
+
+                            var tokenRequest = app.AcquireTokenSilent(new[] { "User.Read" }, ctx.Principal.HasClaim(x => x.Type == "preferred_username") ? ctx.Principal.Claims.First(x => x.Type == "preferred_username").Value : ctx.Principal.Claims.First(x => x.Type == "oid").Value);
+                            var token = tokenRequest.ExecuteAsync();
+
+                            try
+                            {
+
+                            }
+                            catch (MsalUiRequiredException ex)
+                            {
+
+                                throw;
+                            }
+
                         }
                         catch (Exception)
                         {
@@ -106,7 +120,7 @@ namespace MultitenantB2C.OpenId
                     {
                         // todo: add any additional claims here, say a database lookup for specific org, tenant, userinfo, etc.
                         // we also want to copy any claims from the AAD ticket
-                        ctx.Principal.AddIdentity(new ClaimsIdentity(ctx.Principal.Claims.ToList()));
+                        //ctx.Principal.AddIdentity(new ClaimsIdentity(ctx.Principal.Claims.ToList()));
                         return Task.CompletedTask;
                     },
                     OnRedirectToIdentityProvider = ctx =>
