@@ -1,12 +1,12 @@
 <TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="jpdab2c.onmicrosoft.com" PolicyId="B2C_1A_HRD_signin" PublicPolicyUri="http://jpdab2c.onmicrosoft.com/B2C_1A_HRD_signin" DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:applicationinsights" TenantObjectId="0b6270a6-46b8-4c8b-8f45-265f396bb543">
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="yourtenant.onmicrosoft.com" PolicyId="B2C_1A_HRD_signup_signin" PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_HRD_signup_signin" DeploymentMode="Development" UserJourneyRecorderEndpoint="urn:journeyrecorder:applicationinsights">
   <BasePolicy>
-    <TenantId>jpdab2c.onmicrosoft.com</TenantId>
-    <PolicyId>B2C_1A_HRD_AADCommon</PolicyId>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <PolicyId>B2C_1A_Role_APIs</PolicyId>
   </BasePolicy>
   <UserJourneys>
-    <UserJourney Id="B2C_HRD">
+    <UserJourney Id="B2C_REST_HRD">
       <OrchestrationSteps>
         <OrchestrationStep Order="1" Type="ClaimsExchange">
           <ClaimsExchanges>
@@ -135,7 +135,7 @@
       </OrchestrationSteps>
       <ClientDefinition ReferenceId="DefaultWeb" />
     </UserJourney>
-    <UserJourney Id="B2C_HRD_UserRealm">
+    <UserJourney Id="B2C_UserRealm_HRD">
       <OrchestrationSteps>
         <OrchestrationStep Order="1" Type="ClaimsExchange">
           <ClaimsExchanges>
@@ -272,9 +272,10 @@
     </UserJourney>
   </UserJourneys>
   <RelyingParty>
-    <DefaultUserJourney ReferenceId="B2C_HRD_UserRealm" />
+    <DefaultUserJourney ReferenceId="B2C_UserRealm_HRD" />
     <UserJourneyBehaviors>
-      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="76a4fb8a-edde-4350-8929-cf738127b01e" DeveloperMode="true" ClientEnabled="false" ServerEnabled="true" TelemetryVersion="1.0.0" />
+      <!-- todo: add your app insights instrumentation key, for debugging/tracing, see https://docs.microsoft.com/en-us/azure/active-directory-b2c/troubleshoot-with-application-insights -->
+      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="your-app-insights-instrumentation-key" DeveloperMode="true" ClientEnabled="false" ServerEnabled="true" TelemetryVersion="1.0.0" />
     </UserJourneyBehaviors>
     <TechnicalProfile Id="PolicyProfile">
       <DisplayName>PolicyProfile</DisplayName>
@@ -293,7 +294,7 @@
         <OutputClaim ClaimTypeReferenceId="idpObjectId"/>
         <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
         <OutputClaim ClaimTypeReferenceId="idpTenantId" />
-         <OutputClaim ClaimTypeReferenceId="identityProviderAccessToken" PartnerClaimType="idp_access_token" /> 
+        <OutputClaim ClaimTypeReferenceId="identityProviderAccessToken" PartnerClaimType="idp_access_token" />
         <OutputClaim ClaimTypeReferenceId="identityProviderRefreshToken" PartnerClaimType="idp_refresh_token" />
       </OutputClaims>
       <SubjectNamingInfo ClaimType="sub" />

@@ -5,11 +5,33 @@ VisualStudioVersion = 16.0.29505.145
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultitenantB2C.OpenId", "MultitenantB2C.OpenId\MultitenantB2C.OpenId.csproj", "{B7981FA1-28FA-4A2D-8C5B-C842C041B61F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultitenantB2C.SingleHomed", "MultitenantB2C.SingleHomed\MultitenantB2C.SingleHomed.csproj", "{A1EC8259-441E-4246-8D80-C7396162EE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultitenantB2C.SingleHomed", "MultitenantB2C.SingleHomed\MultitenantB2C.SingleHomed.csproj", "{A1EC8259-441E-4246-8D80-C7396162EE78}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stuff", "Stuff", "{5C9D226D-13BD-4D3B-9C44-7C4AABCB9572}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "B2CSingleHomedPolicies", "B2CSingleHomedPolicies", "{92BD706C-0FB7-4E39-B936-CC81FE7A64C1}"
+	ProjectSection(SolutionItems) = preProject
+		policies\00-TrustFrameworkBase.xml = policies\00-TrustFrameworkBase.xml
+		policies\01-TrustFrameworkExtensions.xml = policies\01-TrustFrameworkExtensions.xml
+		policies\02-AzureAdCommonClaimsProvider.xml = policies\02-AzureAdCommonClaimsProvider.xml
+		policies\03-AADCommonSignUpOrSignInPolicy.xml = policies\03-AADCommonSignUpOrSignInPolicy.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "B2CSingleHomedHRDPolicies", "B2CSingleHomedHRDPolicies", "{4F576D54-35BA-4D40-B3E7-7F5978A23998}"
+	ProjectSection(SolutionItems) = preProject
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_AADCommonClaimsProvider.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_AADCommonClaimsProvider.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_FacebookPhoto.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_FacebookPhoto.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_GitHubClaimsProvider.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_GitHubClaimsProvider.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_AADCommon.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_AADCommon.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_signin.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_signin.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_signup_signin.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_signup_signin.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkBase.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkBase.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkExtensions.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkExtensions.xml
+		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_UI.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_UI.xml
+		policies\b2c-hrd\README.md = policies\b2c-hrd\README.md
 	EndProjectSection
 EndProject
 Global
