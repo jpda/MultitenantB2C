@@ -1,0 +1,162 @@
+<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="yourtenant.onmicrosoft.com" PolicyId="B2C_1A_HRD_SchemaExtensions" PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_HRD_SchemaExtensions">
+  <!-- todo: update 'yourtenant' with your b2c tenant name -->
+  <BasePolicy>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <PolicyId>B2C_1A_SocialProviders</PolicyId>
+  </BasePolicy>
+  <BuildingBlocks>
+    <ClaimsSchema>
+      <ClaimType Id="idpObjectId">
+        <DisplayName>Issuer Object ID</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText/>
+      </ClaimType>
+      <ClaimType Id="idpTenantId">
+        <DisplayName>Issuer Tenant ID</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText/>
+      </ClaimType>
+      <!-- authz/role required claims -->
+      <ClaimType Id="roles">
+        <DisplayName>Consolidated roles collection</DisplayName>
+        <DataType>stringCollection</DataType>
+        <UserHelpText/>
+      </ClaimType>
+      <ClaimType Id="roleString">
+        <DisplayName>User roles</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText/>
+      </ClaimType>
+      <ClaimType Id="serviceRoles">
+        <DisplayName>Roles from application database</DisplayName>
+        <DataType>stringCollection</DataType>
+        <UserHelpText/>
+      </ClaimType>
+      <ClaimType Id="loginHint">
+        <DisplayName>Login Hint</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+      <!-- B2C-driven HRD required claims -->
+      <ClaimType Id="idp">
+        <DisplayName>idp</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_InternalLoginHint">
+        <DisplayName>use aad</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_NamespaceType">
+        <DisplayName>namespacetype</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsFederated">
+        <DisplayName>namespacetype</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsManaged">
+        <DisplayName>namespacetype</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsManagedOrFederated">
+        <DisplayName>use aad</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsAAD">
+        <DisplayName>use aad</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsConsumerDomain">
+        <DisplayName>use aad</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsViralDomain">
+        <DisplayName>use aad</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_IsViralOrConsumer">
+        <DisplayName>use aad</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+      <ClaimType Id="hrd_NotViralOrConsumer">
+        <DisplayName>use aad</DisplayName>
+        <DataType>boolean</DataType>
+      </ClaimType>
+    </ClaimsSchema>
+    <ClaimsTransformations>
+      <!-- authz role transformations -->
+      <ClaimsTransformation Id="ConvertRolesCollectionToDelimtedString" TransformationMethod="StringJoin">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="roles" TransformationClaimType="inputClaim" />
+        </InputClaims>
+        <InputParameters>
+          <InputParameter DataType="string" Id="delimiter" Value="," />
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="roleString" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+      <!-- b2c-driven HRD required transformations -->
+      <ClaimsTransformation Id="SetFederated" TransformationMethod="StringContains">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="hrd_NamespaceType" TransformationClaimType="inputClaim"/>
+        </InputClaims>
+        <InputParameters>
+          <InputParameter Id="contains" DataType="string" Value="federated"/>
+          <InputParameter Id="ignoreCase" DataType="string" Value="true"/>
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="hrd_IsFederated" TransformationClaimType="outputClaim"/>
+        </OutputClaims>
+      </ClaimsTransformation>
+      <ClaimsTransformation Id="SetManaged" TransformationMethod="StringContains">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="hrd_NamespaceType" TransformationClaimType="inputClaim"/>
+        </InputClaims>
+        <InputParameters>
+          <InputParameter Id="contains" DataType="string" Value="managed"/>
+          <InputParameter Id="ignoreCase" DataType="string" Value="true"/>
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="hrd_IsManaged" TransformationClaimType="outputClaim"/>
+        </OutputClaims>
+      </ClaimsTransformation>
+      <ClaimsTransformation Id="SetIsViralOrConsumer" TransformationMethod="OrClaims">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="hrd_IsConsumerDomain" TransformationClaimType="inputClaim1" />
+          <InputClaim ClaimTypeReferenceId="hrd_IsViralDomain" TransformationClaimType="inputClaim2" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="hrd_IsViralOrConsumer" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+      <ClaimsTransformation Id="SetIsManagedOrFederated" TransformationMethod="OrClaims">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="hrd_IsManaged" TransformationClaimType="inputClaim1" />
+          <InputClaim ClaimTypeReferenceId="hrd_IsFederated" TransformationClaimType="inputClaim2" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="hrd_IsManagedOrFederated" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+      <ClaimsTransformation Id="SetIsAAD" TransformationMethod="AndClaims">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="hrd_NotViralOrConsumer" TransformationClaimType="inputClaim1" />
+          <InputClaim ClaimTypeReferenceId="hrd_IsManagedOrFederated" TransformationClaimType="inputClaim2" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="hrd_IsAAD" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+      <ClaimsTransformation Id="SetNotViralOrConsumer" TransformationMethod="NotClaims">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="hrd_IsViralOrConsumer" TransformationClaimType="inputClaim" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="hrd_NotViralOrConsumer" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+    </ClaimsTransformations>
+  </BuildingBlocks>
+</TrustFrameworkPolicy>

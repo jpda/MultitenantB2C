@@ -1,8 +1,9 @@
 <TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="jpdab2c.onmicrosoft.com" PolicyId="B2C_1A_AADCommonClaimsProvider" PublicPolicyUri="http://jpdab2c.onmicrosoft.com/B2C_1A_AADCommonClaimsProvider" TenantObjectId="0b6270a6-46b8-4c8b-8f45-265f396bb543">
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="yourtenant.onmicrosoft.com" PolicyId="B2C_1A_AADCommonClaimsProvider" PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_AADCommonClaimsProvider">
+  <!-- todo: update 'yourtenant' with your b2c tenant name -->
   <BasePolicy>
-    <TenantId>jpdab2c.onmicrosoft.com</TenantId>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
     <PolicyId>B2C_1A_TrustFrameworkExtensions</PolicyId>
   </BasePolicy>
   <BuildingBlocks>
@@ -75,7 +76,8 @@
           <DisplayName>Work or school account</DisplayName>
           <Protocol Name="OpenIdConnect" />
           <Metadata>
-            <Item Key="client_id">cc6d9ef5-f275-4b13-8d4e-15b8303c2415</Item>
+            <!-- todo: add your AAD multitenant app id here, see https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant-custom?tabs=applications -->
+            <Item Key="client_id">your-multitenant-app-id</Item>
             <Item Key="UsePolicyInRedirectUri">0</Item>
             <Item Key="METADATA">https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration</Item>
             <Item Key="response_types">code</Item>
@@ -122,11 +124,12 @@
           <DisplayName>Application authorization database</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
-            <Item Key="ServiceUrl">https://b2c-authz.azurewebsites.net/api/get-claims</Item>
+            <!-- todo: add your rest API for getting role claims, see sample azure function at https://github.com/jpda/multitenantb2c/func -->
+            <Item Key="ServiceUrl">https://some-api-endpoint/api/get-claims</Item>
             <Item Key="SendClaimsIn">Body</Item>
-            <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
+            <!-- todo: Set AuthenticationType to Basic or ClientCertificate in production environments -->
             <Item Key="AuthenticationType">None</Item>
-            <!-- REMOVE the following line in production environments -->
+            <!-- todo: REMOVE the following line in production environments -->
             <Item Key="AllowInsecureAuthInProduction">true</Item>
           </Metadata>
           <InputClaims>
@@ -159,7 +162,8 @@
             <Item Key="scope">user</Item>
             <Item Key="HttpBinding">POST</Item>
             <Item Key="UsePolicyInRedirectUri">0</Item>
-            <Item Key="client_id">cddc2cf7948b017a0f65</Item>
+            <!-- todo: add your github client id -->
+            <Item Key="client_id">gh client id</Item>
           </Metadata>
           <CryptographicKeys>
             <Key Id="client_secret" StorageReferenceId="B2C_1A_GitHubSecret" />
@@ -199,7 +203,8 @@
             <!-- The Facebook required HTTP GET method, but the access token response is in JSON format from 3/27/2017 -->
             <Item Key="AccessTokenResponseFormat">json</Item>
             <Item Key="domain_hint">facebook.com</Item>
-            <Item Key="client_id">2032467870307967</Item>
+            <!-- todo: add your facebook app id -->
+            <Item Key="client_id">your-facebook-app-id</Item>
             <Item Key="scope">email public_profile</Item>
             <Item Key="ClaimsEndpoint">https://graph.facebook.com/me?fields=id,first_name,last_name,name,email,picture</Item>
             <Item Key="ResolveJsonPathsInJsonTokens">true</Item>

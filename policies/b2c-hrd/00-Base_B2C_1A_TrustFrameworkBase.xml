@@ -1,4 +1,7 @@
-<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="jpdab2c.onmicrosoft.com" PolicyId="B2C_1A_TrustFrameworkBase" PublicPolicyUri="http://jpdab2c.onmicrosoft.com/B2C_1A_TrustFrameworkBase" TenantObjectId="0b6270a6-46b8-4c8b-8f45-265f396bb543">
+<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="yourtenant.onmicrosoft.com" PolicyId="B2C_1A_TrustFrameworkBase" PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkBase" TenantObjectId="0b6270a6-46b8-4c8b-8f45-265f396bb543">
+  <!-- todo: update 'yourtenant' with your b2c tenant name -->
   <BuildingBlocks>
     <ClaimsSchema>
       <!-- The ClaimsSchema is divided into three sections:
@@ -83,14 +86,9 @@
       </ClaimType>
       <!-- The password regular expression above is constructed for AAD passwords based on restrictions at https://msdn.microsoft.com/en-us/library/azure/jj943764.aspx
 
-        ^( # one of the following four combinations must appear in the password
-         (?=.*[a-z])(?=.*[A-Z])(?=.*\d) |            # matches lower case, upper case or digit
-         (?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]) |  # matches lower case, upper case or special character (i.e. non-alpha or digit)
-         (?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]) |     # matches lower case, digit, or special character
-         (?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])       # matches upper case, digit, or special character
+        ^( # one of the following four combinations must appear in the password (?=.*[a-z])(?=.*[A-Z])(?=.*\d) |            # matches lower case, upper case or digit (?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]) |  # matches lower case, upper case or special character (i.e. non-alpha or digit) (?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]) |     # matches lower case, digit, or special character (?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])       # matches upper case, digit, or special character
         )
-        ( # The password must match the following restrictions
-         [A-Za-z\d@#$%^&*\-_+=[\]{}|\\:',?/`~"();!] |   # The list of all acceptable characters (without .)
+        ( # The password must match the following restrictions [A-Za-z\d@#$%^&*\-_+=[\]{}|\\:',?/`~"();!] |   # The list of all acceptable characters (without .)
          \.(?!@)                                        # or . can appear as long as not followed by @
         ) {8,16}$                                       # the length must be between 8 and 16 chars inclusive
 
@@ -438,9 +436,10 @@
           <DisplayName>Azure Active Directory</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.AzureActiveDirectoryProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
-            <Item Key="ApplicationObjectId">7aa5a327-4e9c-4179-925d-6aa51564c1bb</Item>
+          <!-- todo: app object id and client id, see https://docs.microsoft.com/en-us/azure/active-directory-b2c/custom-policy-custom-attributes -->
+            <Item Key="ApplicationObjectId">49647313-512e-46fb-be0c-7e1b9362cb19</Item>
             <!-- This is the "Object ID" from the "b2c-extensions-app"-->
-            <Item Key="ClientId">bf169d2c-7b1c-4ebc-9db1-b9fd31964d98</Item>
+            <Item Key="ClientId">3374a64e-7c51-4a3b-a71f-c59ce3645565</Item>
             <!--This is the "Application ID" from the "b2c-extensions-app"-->
           </Metadata>
           <CryptographicKeys>
@@ -715,7 +714,7 @@
           </InputClaims>
           <OutputClaims>
             <OutputClaim ClaimTypeReferenceId="objectId" />
-            <OutputClaim ClaimTypeReferenceId="email"  Required="true" />
+            <OutputClaim ClaimTypeReferenceId="email" Required="true" />
             <OutputClaim ClaimTypeReferenceId="newPassword" Required="true" />
             <OutputClaim ClaimTypeReferenceId="reenterPassword" Required="true" />
             <OutputClaim ClaimTypeReferenceId="executed-SelfAsserted-Input" DefaultValue="true" />

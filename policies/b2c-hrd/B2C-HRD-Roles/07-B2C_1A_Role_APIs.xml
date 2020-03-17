@@ -1,0 +1,41 @@
+<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="yourtenant.onmicrosoft.com" PolicyId="B2C_1A_Role_APIs" PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_Role_APIs">
+  <!-- todo: update 'yourtenant' with your b2c tenant name -->
+  <BasePolicy>
+    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <PolicyId>B2C_1A_HRD_APIs</PolicyId>
+  </BasePolicy>
+  <ClaimsProviders>
+    <ClaimsProvider>
+      <DisplayName>REST APIs - Role data</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="ApplicationAuthZService">
+          <DisplayName>Application authorization database</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <!-- todo: add your own rest api for additional role data, see https://github.com/jpda/multitenantb2c -->
+            <Item Key="ServiceUrl">your-authz-service-uri</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+            <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
+            <Item Key="AuthenticationType">None</Item>
+            <!-- REMOVE the following line in production environments -->
+            <Item Key="AllowInsecureAuthInProduction">true</Item>
+          </Metadata>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="oid"/>
+            <InputClaim ClaimTypeReferenceId="newUser" />
+            <InputClaim ClaimTypeReferenceId="signInNames.emailAddress" PartnerClaimType="email" />
+            <InputClaim ClaimTypeReferenceId="idpTenantId" />
+            <InputClaim ClaimTypeReferenceId="identityProvider" />
+            <InputClaim ClaimTypeReferenceId="issuerUserId"/>
+          </InputClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="roles" />
+          </OutputClaims>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+  </ClaimsProviders>
+</TrustFrameworkPolicy>
