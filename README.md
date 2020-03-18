@@ -50,7 +50,7 @@ For a local store, we should expose this via REST API to allow B2C to retrieve r
 |------|---------|-------------|-------------------|
 | AAD  | AAD | AAD portal | customer admin |
 | External fed | External system | External system | customer admin |
-| Local/social | database or user object | your portal | SaaS provider |
+| Local/social | database or user object | your portal | you |
 
 ## Apps
 
