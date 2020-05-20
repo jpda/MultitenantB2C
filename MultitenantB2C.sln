@@ -14,23 +14,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stuff", "Stuff", "{5C9D226D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "B2CSingleHomedPolicies", "B2CSingleHomedPolicies", "{92BD706C-0FB7-4E39-B936-CC81FE7A64C1}"
 	ProjectSection(SolutionItems) = preProject
-		policies\00-TrustFrameworkBase.xml = policies\00-TrustFrameworkBase.xml
-		policies\01-TrustFrameworkExtensions.xml = policies\01-TrustFrameworkExtensions.xml
-		policies\02-AzureAdCommonClaimsProvider.xml = policies\02-AzureAdCommonClaimsProvider.xml
-		policies\03-AADCommonSignUpOrSignInPolicy.xml = policies\03-AADCommonSignUpOrSignInPolicy.xml
+		policies\b2c-hrd\00-Base_B2C_1A_TrustFrameworkBase.xml = policies\b2c-hrd\00-Base_B2C_1A_TrustFrameworkBase.xml
+		policies\b2c-hrd\01-Base_B2C_1A_UI.xml = policies\b2c-hrd\01-Base_B2C_1A_UI.xml
+		policies\b2c-hrd\02-Base_B2C_1A_TrustFrameworkExtensions.xml = policies\b2c-hrd\02-Base_B2C_1A_TrustFrameworkExtensions.xml
+		policies\b2c-hrd\03-Base_B2C_1A_SocialProviders.xml = policies\b2c-hrd\03-Base_B2C_1A_SocialProviders.xml
+		policies\b2c-hrd\App-HRD-Roles\04-AADC-B2C_1A_IdP_AADC_AuthZ_GH_FB.xml = policies\b2c-hrd\App-HRD-Roles\04-AADC-B2C_1A_IdP_AADC_AuthZ_GH_FB.xml
+		policies\b2c-hrd\App-HRD-Roles\05-AADC-B2C_1A_signup_signin.xml = policies\b2c-hrd\App-HRD-Roles\05-AADC-B2C_1A_signup_signin.xml
+		policies\b2c-hrd\README.md = policies\b2c-hrd\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "B2CSingleHomedHRDPolicies", "B2CSingleHomedHRDPolicies", "{4F576D54-35BA-4D40-B3E7-7F5978A23998}"
 	ProjectSection(SolutionItems) = preProject
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_AADCommonClaimsProvider.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_AADCommonClaimsProvider.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_FacebookPhoto.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_FacebookPhoto.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_GitHubClaimsProvider.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_GitHubClaimsProvider.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_AADCommon.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_AADCommon.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_signin.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_HRD_signin.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_signup_signin.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_signup_signin.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkBase.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkBase.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkExtensions.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_TrustFrameworkExtensions.xml
-		policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_UI.xml = policies\b2c-hrd\jpdab2c.onmicrosoft.com-B2C_1A_UI.xml
+		policies\b2c-hrd\00-Base_B2C_1A_TrustFrameworkBase.xml = policies\b2c-hrd\00-Base_B2C_1A_TrustFrameworkBase.xml
+		policies\b2c-hrd\01-Base_B2C_1A_UI.xml = policies\b2c-hrd\01-Base_B2C_1A_UI.xml
+		policies\b2c-hrd\02-Base_B2C_1A_TrustFrameworkExtensions.xml = policies\b2c-hrd\02-Base_B2C_1A_TrustFrameworkExtensions.xml
+		policies\b2c-hrd\03-Base_B2C_1A_SocialProviders.xml = policies\b2c-hrd\03-Base_B2C_1A_SocialProviders.xml
+		policies\b2c-hrd\B2C-HRD-Roles\04-B2C_1A_HRD_SchemaExtensions.xml = policies\b2c-hrd\B2C-HRD-Roles\04-B2C_1A_HRD_SchemaExtensions.xml
+		policies\b2c-hrd\B2C-HRD-Roles\05-B2C_1A_HRD_AADCommonIdentityProvider.xml = policies\b2c-hrd\B2C-HRD-Roles\05-B2C_1A_HRD_AADCommonIdentityProvider.xml
+		policies\b2c-hrd\B2C-HRD-Roles\06-B2C_1A_HRD_APIs.xml = policies\b2c-hrd\B2C-HRD-Roles\06-B2C_1A_HRD_APIs.xml
+		policies\b2c-hrd\B2C-HRD-Roles\07-B2C_1A_Role_APIs.xml = policies\b2c-hrd\B2C-HRD-Roles\07-B2C_1A_Role_APIs.xml
+		policies\b2c-hrd\B2C-HRD-Roles\08-B2C_1A_HRD_Roles_signup_signin.xml = policies\b2c-hrd\B2C-HRD-Roles\08-B2C_1A_HRD_Roles_signup_signin.xml
 		policies\b2c-hrd\README.md = policies\b2c-hrd\README.md
 	EndProjectSection
 EndProject

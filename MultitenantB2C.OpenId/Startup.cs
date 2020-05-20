@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Numerics;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -43,7 +38,7 @@ namespace MultitenantB2C.OpenId
                     o.ClientId = Configuration["AzureAd:ClientId"];
                     o.ClientSecret = Configuration["AzureAd:ClientSecret"];
                     o.CallbackPath = Configuration["AzureAd:CallbackPath"];
-                    o.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                    o.ResponseType = OpenIdConnectResponseType.Code;
                     o.TokenValidationParameters = new TokenValidationParameters()
                     {
                         IssuerValidator = prefixValidator.Validate

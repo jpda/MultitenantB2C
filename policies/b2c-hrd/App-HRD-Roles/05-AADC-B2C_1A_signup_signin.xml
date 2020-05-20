@@ -1,9 +1,9 @@
 <TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="yourtenant.onmicrosoft.com" PolicyId="B2C_1A_signup_signin" PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_signup_signin" aad TenantObjectId="0b6270a6-46b8-4c8b-8f45-265f396bb543">
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="jpdab2c.onmicrosoft.com" PolicyId="B2C_1A_signup_signin" PublicPolicyUri="http://jpdab2c.onmicrosoft.com/B2C_1A_signup_signin">
   <!-- todo: update 'yourtenant' with your b2c tenant name -->
   <BasePolicy>
-    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <TenantId>jpdab2c.onmicrosoft.com</TenantId>
     <PolicyId>B2C_1A_AADCommonClaimsProvider</PolicyId>
   </BasePolicy>
   <UserJourneys>
@@ -15,6 +15,7 @@
             <ClaimsProviderSelection TargetClaimsExchangeId="AzureADExchange" />
             <ClaimsProviderSelection TargetClaimsExchangeId="GitHubExchange" />
             <ClaimsProviderSelection TargetClaimsExchangeId="FacebookExchange" />
+            <ClaimsProviderSelection TargetClaimsExchangeId="BrutusADFSExchange" />
           </ClaimsProviderSelections>
           <ClaimsExchanges>
             <ClaimsExchange Id="LocalAccountSigninEmailExchange" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignin-Email" />
@@ -32,6 +33,7 @@
             <ClaimsExchange Id="AzureADExchange" TechnicalProfileReferenceId="Common-AAD" />
             <ClaimsExchange Id="GitHubExchange" TechnicalProfileReferenceId="GitHub-OAUTH" />
             <ClaimsExchange Id="FacebookExchange" TechnicalProfileReferenceId="Facebook-OAUTH" />
+            <ClaimsExchange Id="BrutusADFSExchange" TechnicalProfileReferenceId="BrutusADFS" />
             <ClaimsExchange Id="SignUpWithLogonEmailExchange" TechnicalProfileReferenceId="LocalAccountSignUpWithLogonEmail" />
           </ClaimsExchanges>
         </OrchestrationStep>
@@ -111,7 +113,7 @@
     <DefaultUserJourney ReferenceId="SignUpOrSignIn-AADCommon" />
     <UserJourneyBehaviors>
       <!-- todo: add your app insights instrumentation key, for debugging/tracing, see https://docs.microsoft.com/en-us/azure/active-directory-b2c/troubleshoot-with-application-insights -->
-      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="<YOUR APP INSIGHTS INSTRUMENTATION KEY>" DeveloperMode="true" ClientEnabled="false" ServerEnabled="true" TelemetryVersion="1.0.0" />
+      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="76a4fb8a-edde-4350-8929-cf738127b01e" DeveloperMode="true" ClientEnabled="false" ServerEnabled="true" TelemetryVersion="1.0.0" />
     </UserJourneyBehaviors>
     <TechnicalProfile Id="PolicyProfile">
       <DisplayName>PolicyProfile</DisplayName>

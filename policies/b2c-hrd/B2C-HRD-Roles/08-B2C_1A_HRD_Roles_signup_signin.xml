@@ -275,11 +275,33 @@
     <DefaultUserJourney ReferenceId="B2C_UserRealm_HRD" />
     <UserJourneyBehaviors>
       <!-- todo: add your app insights instrumentation key, for debugging/tracing, see https://docs.microsoft.com/en-us/azure/active-directory-b2c/troubleshoot-with-application-insights -->
-      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="your-app-insights-instrumentation-key" DeveloperMode="true" ClientEnabled="false" ServerEnabled="true" TelemetryVersion="1.0.0" />
+      <JourneyInsights TelemetryEngine="ApplicationInsights" InstrumentationKey="76a4fb8a-edde-4350-8929-cf738127b01e" DeveloperMode="true" ClientEnabled="false" ServerEnabled="true" TelemetryVersion="1.0.0" />
     </UserJourneyBehaviors>
     <TechnicalProfile Id="PolicyProfile">
       <DisplayName>PolicyProfile</DisplayName>
       <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="displayName" />
+        <OutputClaim ClaimTypeReferenceId="givenName" />
+        <OutputClaim ClaimTypeReferenceId="surname" />
+        <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" PartnerClaimType="email" />
+        <OutputClaim ClaimTypeReferenceId="otherMails" PartnerClaimType="mail" />
+        <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub" />
+        <OutputClaim ClaimTypeReferenceId="identityProvider" />
+        <OutputClaim ClaimTypeReferenceId="avatar"/>
+        <OutputClaim ClaimTypeReferenceId="newUser" />
+        <OutputClaim ClaimTypeReferenceId="roles" />
+        <OutputClaim ClaimTypeReferenceId="idpObjectId"/>
+        <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
+        <OutputClaim ClaimTypeReferenceId="idpTenantId" />
+        <OutputClaim ClaimTypeReferenceId="identityProviderAccessToken" PartnerClaimType="idp_access_token" />
+        <OutputClaim ClaimTypeReferenceId="identityProviderRefreshToken" PartnerClaimType="idp_refresh_token" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="sub" />
+    </TechnicalProfile>
+    <TechnicalProfile Id="OauthProfile">
+      <DisplayName>OauthPolicy</DisplayName>
+      <Protocol Name="OAuth2" />
       <OutputClaims>
         <OutputClaim ClaimTypeReferenceId="displayName" />
         <OutputClaim ClaimTypeReferenceId="givenName" />
